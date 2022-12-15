@@ -1,10 +1,58 @@
-\documentclass{beamer}
-\usepackage{ctex, hyperref}
-\usepackage[T1]{fontenc}
+% https://yuxtech.club/tex/lshort-zh-cn.pdf
+% https://tug.ctan.org/macros/latex/contrib/beamer/doc/beameruserguide.pdf
+% \documentclass[⟨options⟩]{⟨class-name⟩}
+\documentclass{beamer} % 幻灯格式的文档类，使用无衬线字体。
 
-% other packages
-\usepackage{latexsym,amsmath,xcolor,multicol,booktabs,calligra}
-\usepackage{graphicx,pstricks,listings,stackengine}
+%% 字体
+% ctex – LATEX classes and packages for Chinese typesetting
+% https://ftp.jaist.ac.jp/pub/CTAN/language/chinese/ctex/ctex.pdf
+%\usepackage[⟨options⟩]{⟨package-name⟩}
+\usepackage{ctex} % 添加中文及版式的支持
+
+%% 字体
+% fontenc – Standard package for selecting font encodings
+\usepackage[T1]{fontenc} % 切换字体编码
+
+%% 字体 | 颜色
+% xcolor – Driver-independent color extensions for LATEX and pdfLATEX
+% https://ftp.yz.yamagata-u.ac.jp/pub/CTAN/macros/latex/contrib/xcolor/xcolor.pdf
+\usepackage{xcolor} % 切换字体颜色
+
+%% 段落 | 代码
+% listings – Typeset source code listings using LATEX
+% https://ftp.jaist.ac.jp/pub/CTAN/macros/latex/contrib/listings/listings.pdf
+\usepackage{listings} % 提供了排版关键字高亮的代码环境 lstlisting 以及对版式的自定义。类似宏包有 minted
+
+
+
+%% 表格
+% booktabs – Publication quality tables in LATEX
+\usepackage{booktabs} % 排版三线表
+
+%% 插图 | 图片
+% graphicx – Enhanced support for graphics
+\usepackage{graphicx} % 支持插图
+
+%% 插图
+% pgf – Create PostScript and PDF graphics in TEX
+\usepackage{tikz} % 支持绘图
+
+
+%% 符号 | 公式
+% amsmath – AMS mathematical facilities for LATEX
+% https://ftp.yz.yamagata-u.ac.jp/pub/CTAN/macros/latex/required/amsmath/amsldoc.pdf
+\usepackage{amsmath} % AMS 数学公式扩展
+
+%% 符号 | 符号
+% latexsym - The LaTeX symbol fonts for use with LaTeX2ε.
+% http://mirrors.ibiblio.org/CTAN/macros/latex/base/latexsym.pdf
+\usepackage{latexsym} % 带有角标 ℓ 的符号命令依赖 latexsym 宏包。
+
+%% 布局 | 栏
+% multicol – Intermix single and multiple columns
+% https://ftp.yz.yamagata-u.ac.jp/pub/CTAN/macros/latex/required/tools/multicol.pdf
+\usepackage{multicol} % 提供将内容自由分栏的 multicols 环境
+
 
 % packages and settings for bibtex
 \usepackage[backend=bibtex,sorting=none]{biblatex}
@@ -13,11 +61,17 @@
 \setbeamertemplate{bibliography item}[text]   % reference list for bibtex
 \defbibheading{reference}{\section*{参考文献}}   % heading for bibtex
 
-\author{钱隆}
 \title{汽车航迹推算研究进展}
 \subtitle{}
+\author{钱隆}
 \institute{武汉大学测绘遥感信息工程国家重点实验室}
 \date{\today}
+
+% hyperref – Extensive support for hypertext in LATEX
+% https://ftp.yz.yamagata-u.ac.jp/pub/CTAN/macros/latex/contrib/hyperref/doc/hyperref-doc.pdf
+% 为减少可能的冲突，习惯上将 hyperref 宏包放在其它宏包之后调用。
+\usepackage{hyperref} % hyperref 宏包涉及到的链接遍布 LATEX 的每一个角落——目录、引用、脚注、索引、参考文献等等都被封装成超链接。
+
 \usepackage{Whu}
 
 % defs
@@ -38,6 +92,7 @@
     rulesepcolor=\color{red!20!green!20!blue!20},
     frame=shadowbox,
 }
+
 
 
 \begin{document}
@@ -62,16 +117,41 @@
 \subsection{文献}
 
 \begin{frame}{国内外研究现状}
+    根据深度神经网络在航迹推算中
+    \begin{itemize}
+        \item 基于滤波的方法，深度神经网络
+        \item 端到端
+    \end{itemize}
+\end{frame}
 
+\begin{frame}{国内外研究现状}
+    
+    
+    % https://changhao-chen.github.io/
+    % http://deepio.cs.ox.ac.uk/
+    \begin{table}
+    \tiny
+        \begin{tabular}{cccc}
+            \toprule
+            作者 & 文章题目 & 期刊/会议 & 发表日期 \\
+            \midrule
+            Changhao Chen, et al & DynaNet\cite{chen2021dynanet} & IEEE Trans Neural Netw Learn Syst & 2021 \\
+            Changhao Chen, et al & Inertial Odometry\cite{chen2021deep} & IEEE Trans Mob Comput & 2021 \\
+            Changhao Chen, et al & Pedestrian Inertial Navigation\cite{chen2020deep} & IEEE Internet Things J. & 2020 \\
+            Changhao Chen, et al & MotionTransformer\cite{chen2018transferring} & AAAI & 2019 \\
+            Changhao Chen, et al & IONet\cite{chen2018ionet} & AAAI & 2018 \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
 \end{frame}
 
 \subsection{试验}
 
 \begin{frame}{数据集}
     \begin{itemize}
-        \item \textbf{Awesome GINS Dataset}\footfullcite{Tang2022}.
-        \item \textbf{RoNIN Dataset}\footfullcite{herath2020ronin}.
-        \item \textbf{KITTI Dataset}\footfullcite{Geiger2013IJRR}.
+        \item \textbf{Awesome GINS Dataset}\cite{Tang2022}.
+        \item \textbf{RoNIN Dataset}\cite{herath2020ronin}.
+        \item \textbf{KITTI Dataset}\cite{Geiger2013IJRR}.
     \end{itemize}
 \end{frame}
 
@@ -92,14 +172,14 @@
 \end{frame}
 
 
-\begin{frame}[allowframebreaks]{参考文献}
+\begin{frame}[allowframebreaks]{参考文献} % https://stackoverflow.com/questions/913966/how-to-split-table-of-contents-across-multiple-slides-with-latex-beamer
 	\printbibliography[heading=reference]
 \end{frame}
 
 
 \begin{frame}
     \begin{center}
-        {\Huge\calligra 谢谢}
+        {\Huge 谢谢}
     \end{center}
 \end{frame}
 
