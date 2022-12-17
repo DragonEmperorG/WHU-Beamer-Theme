@@ -12,6 +12,35 @@
    year = {2021},
 }
 
+@article{chen2022learning,
+   abstract = {Autonomous vehicles and mobile robotic systems are typically equipped with multiple sensors to provide redundancy. By integrating the observations from different sensors, these mobile agents are able to perceive the environment and estimate system states, e.g., locations and orientations. Although deep learning (DL) approaches for multimodal odometry estimation and localization have gained traction, they rarely focus on the issue of robust sensor fusion--a necessary consideration to deal with noisy or incomplete sensor observations in the real world. Moreover, current deep odometry models suffer from a lack of interpretability. To this extent, we propose SelectFusion, an end-to-end selective sensor fusion module that can be applied to useful pairs of sensor modalities, such as monocular images and inertial measurements, depth images, and light detection and ranging (LIDAR) point clouds. Our model is a uniform framework that is not restricted to specific modality or task. During prediction, the network is able to assess the reliability of the latent features from different sensor modalities and to estimate trajectory at both scale and global pose. In particular, we propose two fusion modules--a deterministic soft fusion and a stochastic hard fusion--and offer a comprehensive study of the new strategies compared with trivial direct fusion. We extensively evaluate all fusion strategies both on public datasets and on progressively degraded datasets that present synthetic occlusions, noisy and missing data, and time misalignment between sensors, and we investigate the effectiveness of the different fusion strategies in attending the most reliable features, which in itself provides insights into the operation of the various models.},
+   author = {Changhao Chen and Stefano Rosa and Chris Xiaoxuan Lu and Bing Wang and Niki Trigoni and Andrew Markham},
+   doi = {10.1109/TNNLS.2022.3176677},
+   issn = {21622388},
+   journal = {IEEE Transactions on Neural Networks and Learning Systems},
+   keywords = {Deep neural networks (DNNs),Feature extraction,Laser radar,Location awareness,Robot sensing systems,Sensor fusion,Task analysis,Visualization,feature selection,localization,multimodal learning,point cloud odometry,robot navigation,sensor fusion,visual-inertial odometry (VIO).},
+   publisher = {Institute of Electrical and Electronics Engineers Inc.},
+   title = {Learning Selective Sensor Fusion for State Estimation},
+   year = {2022},
+}
+
+@article{chen2022contrastive,
+   abstract = {Robust and accurate zero-velocity detection can improve the performance of zero-velocity-aided foot-mounted inertial navigation system. To ensure the accuracy of zero-velocity detection, we propose a novel detector based on contrastive learning. This detector roughly eliminates the inertial data that must not be the zero-velocity event in advance, to reduce the computation cost. Then the detector uses the remaining inertial data to detect the zero-velocity event via a trained contrastive neural network. The contrastive neural network uses the triplet network and is trained by comparing with the anchor data which consists of the known static inertial data from the period of initial alignment. The classifier will finally determine whether the output of the triplet network is the zero-velocity event. Two experiments were conducted to evaluate this novel detector, showing that it can adaptively and accurately detect the zero-velocity event. The horizontal position errors of the two experiments are respectively 1.33m over a 953m outdoor path with walking and 3.74m over a 1143m indoor/outdoor path with combined motion of low dynamic and high dynamic.},
+   author = {Ze Chen and Xianfei Pan and Changhao Chen and Meiping Wu},
+   doi = {10.1109/JSEN.2021.3072160},
+   issn = {1530-437X},
+   issue = {6},
+   journal = {IEEE Sensors Journal},
+   keywords = {Pedestrian navigation,contrastive learning,inertial sensors,triplet network,zero-velocity detection},
+   month = {3},
+   pages = {4962-4969},
+   publisher = {Institute of Electrical and Electronics Engineers Inc.},
+   title = {Contrastive Learning of Zero-Velocity Detection for Pedestrian Inertial Navigation},
+   volume = {22},
+   url = {https://ieeexplore.ieee.org/document/9399505/},
+   year = {2022},
+}
+
 @article{chen2021dynanet,
    abstract = {Dynamical models estimate and predict the temporal evolution of physical systems. State-space models (SSMs) in particular represent the system dynamics with many desirable properties, such as being able to model uncertainty in both the model and measurements, and optimal (in the Bayesian sense) recursive formulations, e.g., the Kalman filter. However, they require significant domain knowledge to derive the parametric form and considerable hand tuning to correctly set all the parameters. Data-driven techniques, e.g., recurrent neural networks, have emerged as compelling alternatives to SSMs with wide success across a number of challenging tasks, in part due to their impressive capability to extract relevant features from rich inputs. They, however, lack interpretability and robustness to unseen conditions. Thus, data-driven models are hard to be applied in safety-critical applications, such as self-driving vehicles. In this work, we present DynaNet, a hybrid deep learning and time-varying SSM, which can be trained end-to-end. Our neural Kalman dynamical model allows us to exploit the relative merits of both SSM and deep neural networks. We demonstrate its effectiveness in the estimation and prediction on a number of physically challenging tasks, including visual odometry, sensor fusion for visual-inertial navigation, and motion prediction. In addition, we show how DynaNet can indicate failures through investigation of properties, such as the rate of innovation (Kalman gain).},
    author = {Changhao Chen and Chris Xiaoxuan Lu and Bing Wang and Niki Trigoni and Andrew Markham},
