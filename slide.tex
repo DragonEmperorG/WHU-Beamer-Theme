@@ -54,23 +54,33 @@
 \usepackage{multicol} % 提供将内容自由分栏的 multicols 环境
 
 
-% packages and settings for bibtex
+%% 引用
+% BibLATEX – Sophisticated Bibliographies in LATEX
+% https://ftp.kddilabs.jp/CTAN/macros/latex/contrib/biblatex/doc/biblatex.pdf
+% backend=bibtex, bibtex8, biber default: biber
+% Specifies the database backend. The following backends are supported:
 \usepackage[backend=bibtex,sorting=none]{biblatex}
-\addbibresource{ref.bib}
-\setbeamerfont{footnote}{size=\tiny}   % footnote for bibtex
-\setbeamertemplate{bibliography item}[text]   % reference list for bibtex
-\defbibheading{reference}{\section*{参考文献}}   % heading for bibtex
+\addbibresource{ref.bib} % 为 biblatex 引入参考文献数据库
+\defbibheading{references}{\section*{参考文献}}   % heading for bibtex
 
-\title{汽车航迹推算研究进展}
-\subtitle{}
-\author{钱隆}
-\institute{武汉大学测绘遥感信息工程国家重点实验室}
-\date{\today}
-
+%% 引用
 % hyperref – Extensive support for hypertext in LATEX
 % https://ftp.yz.yamagata-u.ac.jp/pub/CTAN/macros/latex/contrib/hyperref/doc/hyperref-doc.pdf
 % 为减少可能的冲突，习惯上将 hyperref 宏包放在其它宏包之后调用。
 \usepackage{hyperref} % hyperref 宏包涉及到的链接遍布 LATEX 的每一个角落——目录、引用、脚注、索引、参考文献等等都被封装成超链接。
+
+\setbeamerfont{footnote}{size=\tiny}   % footnote for bibtex
+\setbeamertemplate{bibliography item}[text]   % reference list for bibtex
+
+% 标题页配置项
+\title{汽车航迹推算研究进展}
+\author{钱隆}
+\institute{武汉大学测绘遥感信息工程国家重点实验室}
+\date{\today}
+\titlegraphic{
+    % https://www.whu.edu.cn/xxgk/wdbs.htm 武大标识 01-校徽\02-png\1.1-标准校徽.png
+    \includegraphics[width=0.2\linewidth]{pic/Wuhan_University_Logo.png} 
+}
 
 \usepackage{Whu}
 
@@ -90,21 +100,18 @@
     numbers=left,
     numberstyle=\small\color{halfgray},
     rulesepcolor=\color{red!20!green!20!blue!20},
-    frame=shadowbox,
-}
+    frame=shadowbox}
 
 
 
 \begin{document}
 
 \kaishu
+
+% 幻灯片标题页
 \begin{frame} % https://tex.stackexchange.com/questions/504002/what-is-a-frame-in-beamer
     \titlepage
-    \begin{figure}[htpb]
-        \begin{center}
-            \includegraphics[width=0.2\linewidth]{pic/Wuhan_University_Logo.png} % https://www.whu.edu.cn/xxgk/wdbs.htm 武大标识 01-校徽\02-png\1.1-标准校徽.png
-        \end{center}
-    \end{figure}
+
 \end{frame}
 
 \begin{frame}
@@ -175,7 +182,7 @@
 
 
 \begin{frame}[allowframebreaks]{参考文献} % https://stackoverflow.com/questions/913966/how-to-split-table-of-contents-across-multiple-slides-with-latex-beamer
-	\printbibliography[heading=reference]
+	\printbibliography[heading=references]
 \end{frame}
 
 
