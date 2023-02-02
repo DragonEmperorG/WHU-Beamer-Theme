@@ -43,6 +43,11 @@
 % https://ftp.yz.yamagata-u.ac.jp/pub/CTAN/macros/latex/required/amsmath/amsldoc.pdf
 \usepackage{amsmath} % AMS 数学公式扩展
 
+%% 符号 | 公式
+% siunitx – A comprehensive (SI) units package
+% https://ftp.yz.yamagata-u.ac.jp/pub/CTAN/macros/latex/contrib/siunitx/siunitx.pdf
+\usepackage{siunitx} % 单位符号
+
 %% 符号 | 符号
 % latexsym - The LaTeX symbol fonts for use with LaTeX2ε.
 % http://mirrors.ibiblio.org/CTAN/macros/latex/base/latexsym.pdf
@@ -133,7 +138,6 @@
 
 \begin{frame}{国内外研究现状}
     
-    
     % https://changhao-chen.github.io/
     % http://deepio.cs.ox.ac.uk/
     \begin{table}
@@ -142,7 +146,7 @@
             \toprule
             作者 & 文章题目 & 期刊/会议 & 发表日期 \\
             \midrule
-            Changhao Chen, et al & Learning Selective Sensor Fusion\cite{chen2021dynanet} & IEEE Trans Neural Netw Learn Syst & 2022 \\
+            Changhao Chen, et al & Learning Selective\cite{chen2022learning} & IEEE Trans Neural Netw Learn Syst & 2022 \\
             Ze Chen, et al & Contrastive Learning\cite{chen2022contrastive} & IEEE Sens. J. & 2022 \\
             Changhao Chen, et al & DynaNet\cite{chen2021dynanet} & IEEE Trans Neural Netw Learn Syst & 2021 \\
             Changhao Chen, et al & Deep Neural Network\cite{chen2021deep} & IEEE Trans Mob Comput & 2021 \\
@@ -154,30 +158,116 @@
     \end{table}
 \end{frame}
 
+\begin{frame}{国内外研究现状}
+    
+    % https://changhao-chen.github.io/
+    % http://deepio.cs.ox.ac.uk/
+    \begin{table}
+    \tiny
+        \begin{tabular}{cccc}
+            \toprule
+            作者 & 文章题目 & 期刊/会议 & 发表日期 \\
+            \midrule
+            Zhou Hang, et al & IMU Dead-Reckoning Localization\cite{zhou2022imu} & IROS & 2022 \\
+            Brossard Martin, et al & AI-IMU Dead-Reckoning\cite{brossard2020ai} & IEEE Trans Intell. Vehicles & 2020 \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
+
 \subsection{试验}
 
 \begin{frame}{数据集}
+    KITTI数据集IMU采样率为100Hz, L1/L2 RTK下, 参考真值标称位置精度为 \qty{0.01}{\meter}, 速度精度(RMS)为 \qty{0.05}{\km\per\hour}(开阔环境下)
     \begin{itemize}
-        \item \textbf{Awesome GINS Dataset}\cite{Tang2022}.
-        \item \textbf{RoNIN Dataset}\cite{herath2020ronin}.
-        \item \textbf{KITTI Dataset}\cite{Geiger2013IJRR}.
+        \item 车行
+        \begin{itemize}
+            \item \textbf{Awesome GINS Dataset}\cite{Tang2022}.
+            \item Canadian Adverse Driving Conditions Dataset\cite{pitropov2021canadian}.
+            \item \textbf{KITTI Dataset}\cite{Geiger2013IJRR}.
+        \end{itemize}
+        \item 人行
+        \begin{itemize}
+            \item \textbf{RoNIN Dataset}\cite{herath2020ronin}.
+        \end{itemize}   
     \end{itemize}
 \end{frame}
 
 \begin{frame}{深度神经网络模型}
+    作者使用 Visual Odometry / SLAM Evaluation 2012 子数据集做训练和评估
     \begin{itemize}
-        \item 数据集和模型间的交叉验证
+        \item \textbf{AI-IMU Dead-Reckoning}\cite{brossard2020ai}.
     \end{itemize}
 \end{frame}
 
+\begin{frame}
+    KITTI数据集中2011\_09\_30\_drive\_0028采集段用AI-IMU Dead-Reckoning模型预测的结果
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[scale=0.2]{pic/experiment_kitti_2011_09_30_drive_0028.png}
+        \caption{AI-IMU Dead-Reckoning模型预测坐标结果}
+    \end{figure}
+\end{frame}
 
+\begin{frame}
+     KITTI数据集中2011\_09\_30\_drive\_0028采集段初始状态旋转90用AI-IMU Dead-Reckoning模型预测的结果。 除了试验不同的初值，还试验了重采样，初值的选择和相同采样率下的重采样，对航迹推算影响较小
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[scale=0.2]{pic/experiment_kitti_2011_09_30_drive_0028_init_rotate.png}
+        \caption{AI-IMU Dead-Reckoning模型预测坐标结果}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    KITTI数据集中2022\_03\_15\_drive\_0001用AI-IMU Dead-Reckoning模型预测失败。可能的原因: 相较于KITTI数据集, 轮式机器人和机动车运动特征差距较大, 手机传感器精度较低, 手机传感器坐标系不一致。
+   \begin{figure}[htbp]
+       \centering
+       \includegraphics[scale=0.2]{pic/experiment_custom_2022_03_15_drive_0001.png}
+       \caption{AI-IMU Dead-Reckoning模型预测坐标结果}
+   \end{figure}
+\end{frame}
+
+\begin{frame}{KITTI数据集IMU传感器参数和手机传感器参数差异}
+    \begin{table}
+        \tiny
+        \begin{tabular}{cccc}
+            \toprule
+            传感器 & 精度等级 & 陀螺仪零偏稳定性 & 加速度计零偏稳定性\\
+            \midrule
+            % https://www.oxts.com/products/rt3000-v3/
+            % https://www.oxts.com/wp-content/uploads/2021/07/RT3000-v3-datasheet-210702.pdf
+            OxTS RT3000 v3             & 战术级   & \qty{2}{\degree\per\hour}       & \qty{2}{\ug} \\
+            % https://www.st.com/zh/mems-and-sensors/lsm6dsl.html
+            % https://www.st.com/resource/en/datasheet/lsm6dsl.pdf
+            STMicroelectronics LSM6DSL & 微机械级 & \qty{\pm 3}{\degree\per\second} & \qty{\pm 40}{\mg} \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
 
 \section{研究计划}
 
 \begin{frame}
-    \begin{itemize}
+    \begin{enumerate}
         \item 数据集和模型间的交叉验证
-    \end{itemize}
+        \begin{itemize}
+            \item 基于 ai-imu-dr 模型开源代码重新训练滤波模型（作者提供的预训练模型无法加载）
+            \item 基于论文\cite{dugne2021understanding}训练端到端模型
+            \item 实采数据以验证基于手机传感器通用性
+        \end{itemize}
+
+        \item 训练参考真值系统支持
+        \begin{itemize}
+            \item 尝试基于手机GNSS传感器的PPS信号, 实现同参考真值系统的无线同步
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{可能的创新点}
+    \begin{enumerate}
+        \item 自采数据包含停车场环境倒车轨迹
+        \item 模型中包含自适应网络结构识别停车等行为重置参数
+    \end{enumerate}
 \end{frame}
 
 

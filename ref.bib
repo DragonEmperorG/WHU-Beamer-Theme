@@ -1,4 +1,4 @@
-@article{quentin2021,
+@article{dugne2021understanding,
    abstract = {In navigation, deep learning for inertial odometry (IO) has recently been investigated using data from a low-cost IMU only. The measurement of noise, bias, and some errors from which IO suffers is estimated with a deep neural network (DNN) to achieve more accurate pose estimation. While numerous studies on the subject highlighted the performances of their approach, the behavior of data-driven IO with DNN has not been clarified. Therefore, this paper presents a quantitative analysis of kinematics-mimicking DNN-based IO from various aspects. First, the new network architecture is designed to mimic the kinematics and ensure comprehensive analyses. Next, the hyper-parameters of neural networks that are highly correlated to IO are identified. Besides, their role in the performances is investigated. In the evaluation, the analyses were conducted with publicly-available IO datasets for vehicles and drones. The results are introduced to highlight the remaining problems in IO and are considered a guideline to promote further research.},
    author = {Quentin Arnaud Dugne-Hennequin and Hideaki Uchiyama and Joao Paulo Silva Do Monte Lima},
    doi = {10.1109/ACCESS.2021.3062817},
@@ -124,6 +124,22 @@
    year = {2018},
 }
 
+
+@inproceedings{zhou2022imu,
+   author = {Hang Zhou and Yibo Zhao and Xiaogang Xiong and Yunjiang Lou and Shyam Kamal},
+   doi = {10.1109/IROS47612.2022.9982087},
+   isbn = {978-1-6654-7927-1},
+   journal = {2022 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)},
+   month = {10},
+   pages = {11382-11387},
+   publisher = {IEEE},
+   title = {IMU Dead-Reckoning Localization with RNN-IEKF Algorithm},
+   url = {https://ieeexplore.ieee.org/document/9982087/},
+   year = {2022},
+}
+
+
+
 @article{Tang2022,
    abstract = {In filtering-based global navigation satellite system (GNSS) / inertial navigation system (INS) integrated navigation systems, the precise INS mechanization has fully considered the impact of the Earth rotation, Coriolis acceleration, etc. However, most inertial measurement unit (IMU) preintegration models in factor graph optimization (FGO)-based integrated navigation systems are rough and ignore these factors. We propose an FGO-based GNSS/INS integrated navigation system to analyze and evaluate the impact of the Earth rotation on MEMS-IMU preintegration. The proposed FGO-based integration is based on a refined IMU preintegration, in which the Earth rotation is compensated. The proposed GNSS/INS integration is a sliding-window optimizer in which the GNSS positioning and the IMU preintegration are tightly fused within the FGO framework. The simulated GNSS outage in field tests, an effective method, is adopted to evaluate the IMU preintegration quantitatively. The results demonstrate that the refined IMU preintegration can achieve the same accuracy as the precise INS mechanization. In contrast, the rough IMU preintegration and INS mechanization without compensating for the Earth rotation yields notable accuracy degradation. When the GNSS-outage time is 60 seconds, the degradation can be 200% for the industrial-grade MEMS module and more than 10% for the consumer-grade MEMS chip. Besides, the degradation can be more significant if the GNSS-outage time is longer. The proposed FGO-based GNSS/INS integration (https://github.com/i2Nav-WHU/OB_GINS) and the employed datasets (https://github.com/i2Nav-WHU/awesome-gins-datasets) are open-sourced on GitHub.},
    author = {Hailiang Tang and Tisheng Zhang and Xiaoji Niu and Jing Fan and Jingnan Liu},
@@ -138,6 +154,20 @@
    title = {Impact of the Earth Rotation Compensation on MEMS-IMU Preintegration of Factor Graph Optimization},
    volume = {22},
    year = {2022},
+}
+
+@article{pitropov2021canadian,
+   abstract = {The Canadian Adverse Driving Conditions (CADC) dataset was collected with the Autonomoose autonomous vehicle platform, based on a modified Lincoln MKZ. The dataset, collected during winter within the Region of Waterloo, Canada, is the first autonomous driving dataset that focuses on adverse driving conditions specifically. It contains 7,000 frames of annotated data from 8 cameras (Ximea MQ013CG-E2), lidar (VLP-32C), and a GNSS+INS system (Novatel OEM638), collected through a variety of winter weather conditions. The sensors are time synchronized and calibrated with the intrinsic and extrinsic calibrations included in the dataset. Lidar frame annotations that represent ground truth for 3D object detection and tracking have been provided by Scale AI.},
+   author = {Matthew Pitropov and Danson Evan Garcia and Jason Rebello and Michael Smart and Carlos Wang and Krzysztof Czarnecki and Steven Waslander},
+   doi = {10.1177/0278364920979368},
+   issn = {17413176},
+   issue = {4-5},
+   journal = {International Journal of Robotics Research},
+   keywords = {Autonomous vehicle,GPS,IMU,camera,dataset,lidar,winter weather},
+   pages = {681-690},
+   title = {Canadian Adverse Driving Conditions dataset},
+   volume = {40},
+   year = {2021},
 }
 
 % https://blog.csdn.net/chenglinjuan/article/details/105667166 参考文献里面的&字符需要做转义处理
@@ -167,4 +197,16 @@
    volume = {32},
    url = {http://journals.sagepub.com/doi/10.1177/0278364913491297},
    year = {2013},
+}
+
+@article{brossard2020ai,
+   abstract = {In this paper we propose a novel accurate method for dead-reckoning of wheeled vehicles based only on an Inertial Measurement Unit (IMU). In the context of intelligent vehicles, robust and accurate dead-reckoning based on the IMU may prove useful to correlate feeds from imaging sensors, to safely navigate through obstructions, or for safe emergency stops in the extreme case of exteroceptive sensors failure. The key components of the method are the Kalman filter and the use of deep neural networks to dynamically adapt the noise parameters of the filter. The method is tested on the KITTI odometry dataset, and our dead-reckoning inertial method based only on the IMU accurately estimates 3D position, velocity, orientation of the vehicle and self-calibrates the IMU biases. We achieve on average a 1.10% translational error and the algorithm competes with top-ranked methods which, by contrast, use LiDAR or stereo vision. We make our implementation open-source at: https://github.com/mbrossar/ai-imu-dr.},
+   author = {Martin Brossard and Axel Barrau and Silvere Bonnabel},
+   doi = {10.1109/TIV.2020.2980758},
+   issn = {23798858},
+   journal = {IEEE Transactions on Intelligent Vehicles},
+   keywords = {Automobiles,Dead reckoning,Image sensors,Inertial navigation,Intelligent vehicles,KITTI dataset,Kalman filters,Sensors,deep learning,inertial measurement unit,inertial navigation,invariant extended Kalman filter,localization},
+   pages = {1-10},
+   title = {AI-IMU Dead-Reckoning},
+   year = {2020},
 }
