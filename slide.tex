@@ -194,10 +194,34 @@
 \end{frame}
 
 \begin{frame}{深度神经网络模型}
-    作者使用 Visual Odometry / SLAM Evaluation 2012 子数据集做训练和评估
+    作者使用 Visual Odometry / SLAM Evaluation 2012 子数据集做训练和评估。对于相对平移误差(Relative Translation Error, RTE)指标均值为1.10\%, 相对旋转误差(Relative Rotational Error, RRE)指标均值为\qty{0.23}{\degree\per\metre}.
     \begin{itemize}
         \item \textbf{AI-IMU Dead-Reckoning}\cite{brossard2020ai}.
     \end{itemize}
+\end{frame}
+
+\begin{frame}{KITTI Visual Odometry / SLAM Evaluation 2012 子数据集}
+    子数据集中提供真值的轨迹总长度约为\qty{22.2}{\km}，总时长约为\qty{40}{\minute}
+    \begin{table}
+        \tiny
+        \begin{tabular}{ccccc}
+            \toprule
+            序列号 & 轨迹名称 & 长度(\unit{\km}) & 时长(\unit{\s}) & 类别 \\
+            \midrule
+            00 & 2011\_10\_03\_drive\_0027 & 3.7 & 471 & Residential \\
+            01 & 2011\_10\_03\_drive\_0042 & 2.5 & 114 & Road \\
+            02 & 2011\_10\_03\_drive\_0034 & 5.1 & 483 & Residential \\
+            03 & 2011\_09\_26\_drive\_0067 & 0.6 & 83  & Unknown  \\
+            04 & 2011\_09\_30\_drive\_0016 & 0.4 & 28  & Road \\
+            05 & 2011\_09\_30\_drive\_0018 & 2.2 & 288 & Residential \\
+            06 & 2011\_09\_30\_drive\_0020 & 1.2 & 114 & Residential \\
+            07 & 2011\_09\_30\_drive\_0027 & 0.7 & 114 & Residential \\
+            08 & 2011\_09\_30\_drive\_0028 & 3.2 & 423 & Residential \\
+            09 & 2011\_09\_30\_drive\_0033 & 1.7 & 165 & Residential \\
+            10 & 2011\_09\_30\_drive\_0034 & 0.9 & 124 & Residential \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
 \end{frame}
 
 \begin{frame}
@@ -259,12 +283,14 @@
         \item 训练参考真值系统支持
         \begin{itemize}
             \item 尝试基于手机GNSS传感器的PPS信号, 实现同参考真值系统的无线同步
+            \item 尝试基于手机IMU传感器和参考真值系统传感器动态的初始同步
         \end{itemize}
     \end{enumerate}
 \end{frame}
 
 \begin{frame}{可能的创新点}
     \begin{enumerate}
+        \item 基于手机低精度传感器的航迹推算
         \item 自采数据包含停车场环境倒车轨迹
         \item 模型中包含自适应网络结构识别停车等行为重置参数
     \end{enumerate}
