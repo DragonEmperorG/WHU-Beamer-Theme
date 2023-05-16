@@ -29,6 +29,11 @@
 % booktabs – Publication quality tables in LATEX
 \usepackage{booktabs} % 排版三线表
 
+%% 表格
+% tabularx – Tabulars with adjustable-width columns
+% https://ftp.yz.yamagata-u.ac.jp/pub/CTAN/macros/latex/required/tools/tabularx.pdf
+\usepackage{tabularx} % 
+
 %% 插图 | 图片
 % graphicx – Enhanced support for graphics
 \usepackage{graphicx} % 支持插图
@@ -52,6 +57,7 @@
 % latexsym - The LaTeX symbol fonts for use with LaTeX2ε.
 % http://mirrors.ibiblio.org/CTAN/macros/latex/base/latexsym.pdf
 \usepackage{latexsym} % 带有角标 ℓ 的符号命令依赖 latexsym 宏包。
+
 
 %% 布局 | 栏
 % multicol – Intermix single and multiple columns
@@ -102,11 +108,11 @@
     keywordstyle=\bfseries\color{deepblue},
     emphstyle=\ttfamily\color{deepred},    % Custom highlighting style
     stringstyle=\color{deepgreen},
-    numbers=left,
+    numbers=none,
     numberstyle=\small\color{halfgray},
     rulesepcolor=\color{red!20!green!20!blue!20},
-    frame=shadowbox}
-
+    frame=shadowbox
+}
 
 
 \begin{document}
@@ -126,148 +132,202 @@
 
 \section{研究内容}
 
-\subsection{文献}
+\subsection{Android 时间系统}
 
-\begin{frame}{国内外研究现状}
-    根据深度神经网络在航迹推算中
+\begin{frame}[fragile]{System 类}
+    % https://developer.android.google.cn/reference/java/lang/System#currentTimeMillis()
+    \begin{lstlisting}[language = Java]
+public static long currentTimeMillis();
+    \end{lstlisting}
+    Returns the current time in milliseconds. Note that while the unit of time of the return value is a millisecond, 
+    the granularity of the value depends on the underlying operating system and may be larger. 
+    For example, many operating systems measure time in units of tens of milliseconds.\\
+    \begin{tabularx}{\textwidth}{l|X}
+        \toprule
+        \multicolumn{2}{l}{Returns}\\
+        \midrule
+        long & the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.\\
+        \bottomrule
+    \end{tabularx}
+\end{frame}
+
+\begin{frame}[allowframebreaks,fragile]{System 类}
+    % https://developer.android.google.cn/reference/java/lang/System#nanoTime()
+    \begin{lstlisting}[language = Java]
+public static long nanoTime ()
+    \end{lstlisting}
+    \small {
+        Returns the current value of the running Java Virtual Machine's high-resolution time source, in nanoseconds.
+        
+        This method can only be used to measure elapsed time and is not related to any other notion of system or wall-clock time. 
+        The value returned represents nanoseconds since some fixed but arbitrary origin time (perhaps in the future, so values may be negative). 
+        The same origin is used by all invocations of this method in an instance of a Java virtual machine; 
+        other virtual machine instances are likely to use a different origin.
+        
+        This method provides nanosecond precision, but not necessarily nanosecond resolution (that is, how frequently the value changes) - 
+        no guarantees are made except that the resolution is at least as good as that of currentTimeMillis().
+
+        Differences in successive calls that span greater than approximately 292 years (2$^{63}$ nanoseconds) will not correctly compute elapsed time due to numerical overflow.\\
+        The values returned by this method become meaningful only when the difference between two such values, 
+        obtained within the same instance of a Java virtual machine, is computed.
+        
+        The value returned by this method does not account for elapsed time during deep sleep. 
+        For timekeeping facilities available on Android see SystemClock.
+        
+    }
+    \begin{tabularx}{\textwidth}{l|X}
+        \toprule
+        \multicolumn{2}{l}{Returns}\\
+        \midrule
+        long & the current value of the running Java Virtual Machine's high-resolution time source, in nanoseconds.\\
+        \bottomrule
+    \end{tabularx}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{SystemClock 类}
+    % https://developer.android.google.cn/reference/android/os/SystemClock
+    Core timekeeping facilities.
+    
+    Three different clocks are available, and they should not be confused:\\
     \begin{itemize}
-        \item 基于滤波的方法，深度神经网络
-        \item 端到端
+        \item System.currentTimeMillis() is the standard "wall" clock (time and date) expressing milliseconds since the epoch. 
+        The wall clock can be set by the user or the phone network (see setCurrentTimeMillis(long)), 
+        so the time may jump backwards or forwards unpredictably. 
+        This clock should only be used when correspondence with real-world dates and times is important, 
+        such as in a calendar or alarm clock application. 
+        Interval or elapsed time measurements should use a different clock. 
+        If you are using System.currentTimeMillis(), 
+        consider listening to the ACTION\_TIME\_TICK, ACTION\_TIME\_CHANGED and ACTION\_TIMEZONE\_CHANGED Intent broadcasts to find out when the time changes.
+        \item uptimeMillis() is counted in milliseconds since the system was booted. 
+        This clock stops when the system enters deep sleep (CPU off, display dark, device waiting for external input), 
+        but is not affected by clock scaling, idle, or other power saving mechanisms. 
+        This is the basis for most interval timing such as Thread.sleep(millls), Object.wait(millis), and System.nanoTime(). 
+        This clock is guaranteed to be monotonic, and is suitable for interval timing when the interval does not span device sleep. 
+        Most methods that accept a timestamp value currently expect the uptimeMillis() clock.
+        \item elapsedRealtime() and elapsedRealtimeNanos() return the time since the system was booted, and include deep sleep. 
+        This clock is guaranteed to be monotonic, and continues to tick even when the CPU is in power saving modes, 
+        so is the recommend basis for general purpose interval timing.
     \end{itemize}
 \end{frame}
 
-\begin{frame}{国内外研究现状}
-    
-    % https://changhao-chen.github.io/
-    % http://deepio.cs.ox.ac.uk/
-    \begin{table}
-    \tiny
-        \begin{tabular}{cccc}
-            \toprule
-            作者 & 文章题目 & 期刊/会议 & 发表日期 \\
-            \midrule
-            Changhao Chen, et al & Learning Selective\cite{chen2022learning} & IEEE Trans Neural Netw Learn Syst & 2022 \\
-            Ze Chen, et al & Contrastive Learning\cite{chen2022contrastive} & IEEE Sens. J. & 2022 \\
-            Changhao Chen, et al & DynaNet\cite{chen2021dynanet} & IEEE Trans Neural Netw Learn Syst & 2021 \\
-            Changhao Chen, et al & Deep Neural Network\cite{chen2021deep} & IEEE Trans Mob Comput & 2021 \\
-            Changhao Chen, et al & Deep Learning\cite{chen2020deep} & IEEE Internet Things J. & 2020 \\
-            Changhao Chen, et al & MotionTransformer\cite{chen2018transferring} & AAAI & 2019 \\
-            Changhao Chen, et al & IONet\cite{chen2018ionet} & AAAI & 2018 \\
-            \bottomrule
-        \end{tabular}
-    \end{table}
+\begin{frame}[fragile]{SystemClock 类}
+\label{CLASSSystemClockMETHODelapsedRealtimeNanos}
+    % https://developer.android.google.cn/reference/android/os/SystemClock#elapsedRealtimeNanos()
+    \begin{lstlisting}[language = Java]
+public static long elapsedRealtimeNanos ()
+    \end{lstlisting}
+    Returns nanoseconds since boot, including time spent in sleep.
+    \begin{tabularx}{\textwidth}{l|X}
+        \toprule
+        \multicolumn{2}{l}{Returns}\\
+        \midrule
+        long & elapsed nanoseconds since boot.\\
+        \bottomrule
+    \end{tabularx}
 \end{frame}
 
-\begin{frame}{国内外研究现状}
-    
-    % https://changhao-chen.github.io/
-    % http://deepio.cs.ox.ac.uk/
-    \begin{table}
-    \tiny
-        \begin{tabular}{cccc}
-            \toprule
-            作者 & 文章题目 & 期刊/会议 & 发表日期 \\
-            \midrule
-            Zhou Hang, et al & IMU Dead-Reckoning Localization\cite{zhou2022imu} & IROS & 2022 \\
-            Brossard Martin, et al & AI-IMU Dead-Reckoning\cite{brossard2020ai} & IEEE Trans Intell. Vehicles & 2020 \\
-            \bottomrule
-        \end{tabular}
-    \end{table}
+\begin{frame}[fragile]{SensorEvent 类}
+    % https://developer.android.google.cn/reference/android/hardware/SensorEvent#timestamp
+    \begin{lstlisting}[language = Java]
+public long timestamp
+    \end{lstlisting}
+    The time in nanoseconds at which the event happened. 
+    For a given sensor, each new sensor event should be monotonically increasing using the same time base as \hyperlink{CLASSSystemClockMETHODelapsedRealtimeNanos}{SystemClock.elapsedRealtimeNanos()}.
 \end{frame}
 
-\subsection{试验}
+\begin{frame}[fragile]{GnssClock 类}
+\label{CLASSGnssClockMETHODgetTimeNanos}
+    % https://developer.android.google.cn/reference/android/location/GnssClock#getTimeNanos()
+    \begin{lstlisting}[language = Java]
+public long getTimeNanos ()
+    \end{lstlisting}
+    Gets the GNSS receiver internal hardware clock value in nanoseconds.
 
-\begin{frame}{数据集}
-    KITTI数据集IMU采样率为100Hz, L1/L2 RTK下, 参考真值标称位置精度为 \qty{0.01}{\meter}, 速度精度(RMS)为 \qty{0.05}{\km\per\hour}(开阔环境下)
+    This value is expected to be monotonically increasing while the hardware clock remains powered on. For the case of a hardware clock that is not continuously on, see the getHardwareClockDiscontinuityCount() field. The GPS time can be derived by subtracting the sum of getFullBiasNanos() and getBiasNanos() (when they are available) from this value. Sub-nanosecond accuracy can be provided by means of getBiasNanos().
+
+    The error estimate for this value (if applicable) is getTimeUncertaintyNanos().
+\end{frame}
+
+\begin{frame}[fragile]{GnssClock 类}
+    % https://developer.android.google.cn/reference/android/location/GnssClock#getFullBiasNanos()
+    \begin{lstlisting}[language = Java]
+public long getFullBiasNanos ()
+    \end{lstlisting}
+    Gets the difference between hardware clock (\hyperlink{CLASSGnssClockMETHODgetTimeNanos}{getTimeNanos()}) inside GPS receiver and the true GPS time since 0000Z, January 6, 1980, in nanoseconds.
+
+    This value is available if the receiver has estimated GPS time. If the computed time is for a non-GPS constellation, the time offset of that constellation to GPS has to be applied to fill this value. The value is only available if hasFullBiasNanos() is true.
+    
+    The error estimate for the sum of this field and getBiasNanos() is getBiasUncertaintyNanos().
+    
+    The sign of the value is defined by the following equation:
+    \begin{small}
+    \begin{equation*}
+        local\,estimate\,of\,GPS\,time = TimeNanos - (FullBiasNanos + BiasNanos)
+    \end{equation*}
+    \end{small}
+\end{frame}
+
+\begin{frame}[fragile]{GnssClock 类}
+    % https://developer.android.google.cn/reference/android/location/GnssClock#getBiasNanos()
+    \begin{lstlisting}[language = Java]
+public double getBiasNanos ()
+    \end{lstlisting}
+    Gets the clock's sub-nanosecond bias.
+
+    See the description of how this field is part of converting from hardware clock time, to GPS time, in getFullBiasNanos().
+
+    The error estimate for the sum of this field and getFullBiasNanos() is getBiasUncertaintyNanos().
+
+    The value is only available if hasBiasNanos() is true.
+\end{frame}
+
+\begin{frame}[fragile]{GnssClock 类}
+    % https://developer.android.google.cn/reference/android/location/GnssClock#getElapsedRealtimeNanos()
+    \begin{lstlisting}[language = Java]
+public long getElapsedRealtimeNanos ()
+    \end{lstlisting}
+    Returns the elapsed real-time of this clock since system boot, in nanoseconds.
+
+    The value is only available if hasElapsedRealtimeNanos() is true.
+\end{frame}
+
+
+\subsection{设计}
+
+\begin{frame}{}
+    尽可能遍历试验停车场的所有路径。
     \begin{itemize}
-        \item 车行
+        \item 手机型号.
+        \item 手机在车里的位置.
+        \item 手机在车里的姿态.
+        % http://gk.chengdu.gov.cn/govInfoPub/detail.action?id=990785&tn=2
+        % 《机动车停车场场地条件和设施标准》
+        % （四）室内停车场车场范围内设计行车速度V≤5km/h，室外停车场车场范围内设计行车速度V≤10km/h。
+        \item 行车速度.
         \begin{itemize}
-            \item \textbf{Awesome GINS Dataset}\cite{Tang2022}.
-            \item Canadian Adverse Driving Conditions Dataset\cite{pitropov2021canadian}.
-            \item \textbf{KITTI Dataset}\cite{Geiger2013IJRR}.
+            \item 最低速.
+            \item \qty{5}{\km\per\hour}(\qty{1.389}{\m\per\second}).
+            \item \qty{10}{\km\per\hour}(\qty{2.778}{\m\per\second}).
+            \item \qty{15}{\km\per\hour}(\qty{4.167}{\m\per\second}).
         \end{itemize}
-        \item 人行
+        \item 行车路线.
         \begin{itemize}
-            \item \textbf{RoNIN Dataset}\cite{herath2020ronin}.
-        \end{itemize}   
+            \item 直行.
+            \item 倒行.
+            \item 左转.
+            \item 右转.
+            \item 上坡.
+            \item 下坡.
+        \end{itemize}
     \end{itemize}
 \end{frame}
 
-\begin{frame}{深度神经网络模型}
-    作者使用 Visual Odometry / SLAM Evaluation 2012 子数据集做训练和评估。对于相对平移误差(Relative Translation Error, RTE)指标均值为1.10\%, 相对旋转误差(Relative Rotational Error, RRE)指标均值为\qty{0.23}{\degree\per\metre}.
-    \begin{itemize}
-        \item \textbf{AI-IMU Dead-Reckoning}\cite{brossard2020ai}.
-    \end{itemize}
+\begin{frame}{}
+    
 \end{frame}
 
-\begin{frame}{KITTI Visual Odometry / SLAM Evaluation 2012 子数据集}
-    子数据集中提供真值的轨迹总长度约为\qty{22.2}{\km}，总时长约为\qty{40}{\minute}
-    \begin{table}
-        \tiny
-        \begin{tabular}{ccccc}
-            \toprule
-            序列号 & 轨迹名称 & 长度(\unit{\km}) & 时长(\unit{\s}) & 类别 \\
-            \midrule
-            00 & 2011\_10\_03\_drive\_0027 & 3.7 & 471 & Residential \\
-            01 & 2011\_10\_03\_drive\_0042 & 2.5 & 114 & Road \\
-            02 & 2011\_10\_03\_drive\_0034 & 5.1 & 483 & Residential \\
-            03 & 2011\_09\_26\_drive\_0067 & 0.6 & 83  & Unknown  \\
-            04 & 2011\_09\_30\_drive\_0016 & 0.4 & 28  & Road \\
-            05 & 2011\_09\_30\_drive\_0018 & 2.2 & 288 & Residential \\
-            06 & 2011\_09\_30\_drive\_0020 & 1.2 & 114 & Residential \\
-            07 & 2011\_09\_30\_drive\_0027 & 0.7 & 114 & Residential \\
-            08 & 2011\_09\_30\_drive\_0028 & 3.2 & 423 & Residential \\
-            09 & 2011\_09\_30\_drive\_0033 & 1.7 & 165 & Residential \\
-            10 & 2011\_09\_30\_drive\_0034 & 0.9 & 124 & Residential \\
-            \bottomrule
-        \end{tabular}
-    \end{table}
-\end{frame}
 
-\begin{frame}
-    KITTI数据集中2011\_09\_30\_drive\_0028采集段用AI-IMU Dead-Reckoning模型预测的结果
-    \begin{figure}[htbp]
-        \centering
-        \includegraphics[scale=0.2]{pic/experiment_kitti_2011_09_30_drive_0028.png}
-        \caption{AI-IMU Dead-Reckoning模型预测坐标结果}
-    \end{figure}
-\end{frame}
 
-\begin{frame}
-     KITTI数据集中2011\_09\_30\_drive\_0028采集段初始状态旋转90用AI-IMU Dead-Reckoning模型预测的结果。 除了试验不同的初值，还试验了重采样，初值的选择和相同采样率下的重采样，对航迹推算影响较小
-    \begin{figure}[htbp]
-        \centering
-        \includegraphics[scale=0.2]{pic/experiment_kitti_2011_09_30_drive_0028_init_rotate.png}
-        \caption{AI-IMU Dead-Reckoning模型预测坐标结果}
-    \end{figure}
-\end{frame}
-
-\begin{frame}
-    KITTI数据集中2022\_03\_15\_drive\_0001用AI-IMU Dead-Reckoning模型预测失败。可能的原因: 相较于KITTI数据集, 轮式机器人和机动车运动特征差距较大, 手机传感器精度较低, 手机传感器坐标系不一致。
-   \begin{figure}[htbp]
-       \centering
-       \includegraphics[scale=0.2]{pic/experiment_custom_2022_03_15_drive_0001.png}
-       \caption{AI-IMU Dead-Reckoning模型预测坐标结果}
-   \end{figure}
-\end{frame}
-
-\begin{frame}{KITTI数据集IMU传感器参数和手机传感器参数差异}
-    \begin{table}
-        \tiny
-        \begin{tabular}{cccc}
-            \toprule
-            传感器 & 精度等级 & 陀螺仪零偏稳定性 & 加速度计零偏稳定性\\
-            \midrule
-            % https://www.oxts.com/products/rt3000-v3/
-            % https://www.oxts.com/wp-content/uploads/2021/07/RT3000-v3-datasheet-210702.pdf
-            OxTS RT3000 v3             & 战术级   & \qty{2}{\degree\per\hour}       & \qty{2}{\ug} \\
-            % https://www.st.com/zh/mems-and-sensors/lsm6dsl.html
-            % https://www.st.com/resource/en/datasheet/lsm6dsl.pdf
-            STMicroelectronics LSM6DSL & 微机械级 & \qty{\pm 3}{\degree\per\second} & \qty{\pm 40}{\mg} \\
-            \bottomrule
-        \end{tabular}
-    \end{table}
-\end{frame}
 
 \section{研究计划}
 
