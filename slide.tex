@@ -122,7 +122,6 @@
 % 幻灯片标题页
 \begin{frame} % https://tex.stackexchange.com/questions/504002/what-is-a-frame-in-beamer
     \titlepage
-
 \end{frame}
 
 \begin{frame}
@@ -130,229 +129,127 @@
 \end{frame}
 
 
-\section{研究内容}
-
-\subsection{Android 时间系统}
-
-\begin{frame}[fragile]{System 类}
-    % https://developer.android.google.cn/reference/java/lang/System#currentTimeMillis()
-    \begin{lstlisting}[language = Java]
-public static long currentTimeMillis();
-    \end{lstlisting}
-    Returns the current time in milliseconds. Note that while the unit of time of the return value is a millisecond, 
-    the granularity of the value depends on the underlying operating system and may be larger. 
-    For example, many operating systems measure time in units of tens of milliseconds.\\
-    \begin{tabularx}{\textwidth}{l|X}
-        \toprule
-        \multicolumn{2}{l}{Returns}\\
-        \midrule
-        long & the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.\\
-        \bottomrule
-    \end{tabularx}
-\end{frame}
-
-\begin{frame}[allowframebreaks,fragile]{System 类}
-    % https://developer.android.google.cn/reference/java/lang/System#nanoTime()
-    \begin{lstlisting}[language = Java]
-public static long nanoTime ()
-    \end{lstlisting}
-    \small {
-        Returns the current value of the running Java Virtual Machine's high-resolution time source, in nanoseconds.
-        
-        This method can only be used to measure elapsed time and is not related to any other notion of system or wall-clock time. 
-        The value returned represents nanoseconds since some fixed but arbitrary origin time (perhaps in the future, so values may be negative). 
-        The same origin is used by all invocations of this method in an instance of a Java virtual machine; 
-        other virtual machine instances are likely to use a different origin.
-        
-        This method provides nanosecond precision, but not necessarily nanosecond resolution (that is, how frequently the value changes) - 
-        no guarantees are made except that the resolution is at least as good as that of currentTimeMillis().
-
-        Differences in successive calls that span greater than approximately 292 years (2$^{63}$ nanoseconds) will not correctly compute elapsed time due to numerical overflow.\\
-        The values returned by this method become meaningful only when the difference between two such values, 
-        obtained within the same instance of a Java virtual machine, is computed.
-        
-        The value returned by this method does not account for elapsed time during deep sleep. 
-        For timekeeping facilities available on Android see SystemClock.
-        
-    }
-    \begin{tabularx}{\textwidth}{l|X}
-        \toprule
-        \multicolumn{2}{l}{Returns}\\
-        \midrule
-        long & the current value of the running Java Virtual Machine's high-resolution time source, in nanoseconds.\\
-        \bottomrule
-    \end{tabularx}
-\end{frame}
-
-\begin{frame}[allowframebreaks]{SystemClock 类}
-    % https://developer.android.google.cn/reference/android/os/SystemClock
-    Core timekeeping facilities.
-    
-    Three different clocks are available, and they should not be confused:\\
-    \begin{itemize}
-        \item System.currentTimeMillis() is the standard "wall" clock (time and date) expressing milliseconds since the epoch. 
-        The wall clock can be set by the user or the phone network (see setCurrentTimeMillis(long)), 
-        so the time may jump backwards or forwards unpredictably. 
-        This clock should only be used when correspondence with real-world dates and times is important, 
-        such as in a calendar or alarm clock application. 
-        Interval or elapsed time measurements should use a different clock. 
-        If you are using System.currentTimeMillis(), 
-        consider listening to the ACTION\_TIME\_TICK, ACTION\_TIME\_CHANGED and ACTION\_TIMEZONE\_CHANGED Intent broadcasts to find out when the time changes.
-        \item uptimeMillis() is counted in milliseconds since the system was booted. 
-        This clock stops when the system enters deep sleep (CPU off, display dark, device waiting for external input), 
-        but is not affected by clock scaling, idle, or other power saving mechanisms. 
-        This is the basis for most interval timing such as Thread.sleep(millls), Object.wait(millis), and System.nanoTime(). 
-        This clock is guaranteed to be monotonic, and is suitable for interval timing when the interval does not span device sleep. 
-        Most methods that accept a timestamp value currently expect the uptimeMillis() clock.
-        \item elapsedRealtime() and elapsedRealtimeNanos() return the time since the system was booted, and include deep sleep. 
-        This clock is guaranteed to be monotonic, and continues to tick even when the CPU is in power saving modes, 
-        so is the recommend basis for general purpose interval timing.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{SystemClock 类}
-\label{CLASSSystemClockMETHODelapsedRealtimeNanos}
-    % https://developer.android.google.cn/reference/android/os/SystemClock#elapsedRealtimeNanos()
-    \begin{lstlisting}[language = Java]
-public static long elapsedRealtimeNanos ()
-    \end{lstlisting}
-    Returns nanoseconds since boot, including time spent in sleep.
-    \begin{tabularx}{\textwidth}{l|X}
-        \toprule
-        \multicolumn{2}{l}{Returns}\\
-        \midrule
-        long & elapsed nanoseconds since boot.\\
-        \bottomrule
-    \end{tabularx}
-\end{frame}
-
-\begin{frame}[fragile]{SensorEvent 类}
-    % https://developer.android.google.cn/reference/android/hardware/SensorEvent#timestamp
-    \begin{lstlisting}[language = Java]
-public long timestamp
-    \end{lstlisting}
-    The time in nanoseconds at which the event happened. 
-    For a given sensor, each new sensor event should be monotonically increasing using the same time base as \hyperlink{CLASSSystemClockMETHODelapsedRealtimeNanos}{SystemClock.elapsedRealtimeNanos()}.
-\end{frame}
-
-\begin{frame}[fragile]{GnssClock 类}
-\label{CLASSGnssClockMETHODgetTimeNanos}
-    % https://developer.android.google.cn/reference/android/location/GnssClock#getTimeNanos()
-    \begin{lstlisting}[language = Java]
-public long getTimeNanos ()
-    \end{lstlisting}
-    Gets the GNSS receiver internal hardware clock value in nanoseconds.
-
-    This value is expected to be monotonically increasing while the hardware clock remains powered on. For the case of a hardware clock that is not continuously on, see the getHardwareClockDiscontinuityCount() field. The GPS time can be derived by subtracting the sum of getFullBiasNanos() and getBiasNanos() (when they are available) from this value. Sub-nanosecond accuracy can be provided by means of getBiasNanos().
-
-    The error estimate for this value (if applicable) is getTimeUncertaintyNanos().
-\end{frame}
-
-\begin{frame}[fragile]{GnssClock 类}
-    % https://developer.android.google.cn/reference/android/location/GnssClock#getFullBiasNanos()
-    \begin{lstlisting}[language = Java]
-public long getFullBiasNanos ()
-    \end{lstlisting}
-    Gets the difference between hardware clock (\hyperlink{CLASSGnssClockMETHODgetTimeNanos}{getTimeNanos()}) inside GPS receiver and the true GPS time since 0000Z, January 6, 1980, in nanoseconds.
-
-    This value is available if the receiver has estimated GPS time. If the computed time is for a non-GPS constellation, the time offset of that constellation to GPS has to be applied to fill this value. The value is only available if hasFullBiasNanos() is true.
-    
-    The error estimate for the sum of this field and getBiasNanos() is getBiasUncertaintyNanos().
-    
-    The sign of the value is defined by the following equation:
-    \begin{small}
-    \begin{equation*}
-        local\,estimate\,of\,GPS\,time = TimeNanos - (FullBiasNanos + BiasNanos)
-    \end{equation*}
-    \end{small}
-\end{frame}
-
-\begin{frame}[fragile]{GnssClock 类}
-    % https://developer.android.google.cn/reference/android/location/GnssClock#getBiasNanos()
-    \begin{lstlisting}[language = Java]
-public double getBiasNanos ()
-    \end{lstlisting}
-    Gets the clock's sub-nanosecond bias.
-
-    See the description of how this field is part of converting from hardware clock time, to GPS time, in getFullBiasNanos().
-
-    The error estimate for the sum of this field and getFullBiasNanos() is getBiasUncertaintyNanos().
-
-    The value is only available if hasBiasNanos() is true.
-\end{frame}
-
-\begin{frame}[fragile]{GnssClock 类}
-    % https://developer.android.google.cn/reference/android/location/GnssClock#getElapsedRealtimeNanos()
-    \begin{lstlisting}[language = Java]
-public long getElapsedRealtimeNanos ()
-    \end{lstlisting}
-    Returns the elapsed real-time of this clock since system boot, in nanoseconds.
-
-    The value is only available if hasElapsedRealtimeNanos() is true.
-\end{frame}
-
-
-\subsection{设计}
-
-\begin{frame}{}
-    尽可能遍历试验停车场的所有路径。
-    \begin{itemize}
-        \item 手机型号.
-        \item 手机在车里的位置.
-        \item 手机在车里的姿态.
-        % http://gk.chengdu.gov.cn/govInfoPub/detail.action?id=990785&tn=2
-        % 《机动车停车场场地条件和设施标准》
-        % （四）室内停车场车场范围内设计行车速度V≤5km/h，室外停车场车场范围内设计行车速度V≤10km/h。
-        \item 行车速度.
-        \begin{itemize}
-            \item 最低速.
-            \item \qty{5}{\km\per\hour}(\qty{1.389}{\m\per\second}).
-            \item \qty{10}{\km\per\hour}(\qty{2.778}{\m\per\second}).
-            \item \qty{15}{\km\per\hour}(\qty{4.167}{\m\per\second}).
-        \end{itemize}
-        \item 行车路线.
-        \begin{itemize}
-            \item 直行.
-            \item 倒行.
-            \item 左转.
-            \item 右转.
-            \item 上坡.
-            \item 下坡.
-        \end{itemize}
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{}
-    
-\end{frame}
-
-
-
-
-\section{研究计划}
+\section{研究背景}
 
 \begin{frame}
+    研究出发点
     \begin{enumerate}
-        \item 数据集和模型间的交叉验证
-        \begin{itemize}
-            \item 基于 ai-imu-dr 模型开源代码重新训练滤波模型（作者提供的预训练模型无法加载）
-            \item 基于论文\cite{dugne2021understanding}训练端到端模型
-            \item 实采数据以验证基于手机传感器通用性
-        \end{itemize}
-
-        \item 训练参考真值系统支持
-        \begin{itemize}
-            \item 尝试基于手机GNSS传感器的PPS信号, 实现同参考真值系统的无线同步
-            \item 尝试基于手机IMU传感器和参考真值系统传感器动态的初始同步
-        \end{itemize}
+        \item 高可用高精度室内外无缝定位的需求
+        \item 智能手机终端泛用性
+    \end{enumerate}
+    研究难点
+    \begin{enumerate}
+        \item 室内环境复杂
+        \item 智能手机传感器精度较差
     \end{enumerate}
 \end{frame}
 
-\begin{frame}{可能的创新点}
+\begin{frame}{博士大论文章节安排}
+    博士大论文拟定的题目为《基于智能手机的数据和模型双驱动室内定位方法研究》，目前第3和第5章有发表于《基于数据与模型双驱动的音频/惯性传感器耦合定位方法》做支撑，但是作为大论文需要对文章中
+    \begin{description}
+        \item[1] 绪论
+        \item[2] 定位基本原理
+        \item[3] 数据驱动行人航迹推算
+        \item[4] 数据驱动车载航迹推算
+        \item[5] 数据驱动行人航迹推算和音频融合定位算法研究
+        \item[6] 数据驱动车载航迹推算和蓝牙融合定位算法研究
+        \item[7] 总结和展望
+    \end{description}
+\end{frame}
+
+\begin{frame}{现有研究成果}
+    目前第3和第5章有发表于《测绘学报》的《基于数据与模型双驱动的音频/惯性传感器耦合定位方法》做支撑，但是作为大论文需要对文章中数据驱动行人航迹推算部分模型进行小创新的研究，因为那篇文章中我仅使用了牛老师组提供的模型。
+    
+    从2022年12月到2023年5月，约6个月的时间对第4章的内容进行研究（在22年大约有零散的2个月对该方向进行了研究），目前使用自采数据，部分验证了基于不变卡尔曼滤波解决行车航迹推算的问题。
+
+\end{frame}
+
+\section{研究内容}
+
+\begin{frame}{数据集}
+    \begin{itemize}
+        \item 公开数据集
+        \begin{itemize}
+            \item KITTI (2013)
+        \end{itemize}
+
+        \item 自采数据集
+        \begin{itemize}
+            \item 重庆202304数据集
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{智能手机（Android）采样率}
+	
+	% https://www.st.com/resource/en/datasheet/lsm6dsm.pdf
+	
+	% https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi160-ds000.pdf
+	% https://www.st.com/resource/en/datasheet/lis2mdl.pdf
+    \begin{table}
+    \tiny
+        \begin{tabular}{lccc}
+            \toprule
+	            传感器/手机 (Hz) & HUAWEI Mate30 & HUAWEI P20 & GOOGLE Pixel3 \\
+	            \midrule
+	            TYPE\_ACCELEROMETER & 500 & 500 & 393(400) \\
+				TYPE\_ACCELEROMETER\_UNCALIBRATED & 250 & 250 & 393(400) \\
+				TYPE\_GYROSCOPE & 500 & 500 & 393(400) \\
+				TYPE\_GYROSCOPE\_UNCALIBRATED & 500 & 500 & 393(400) \\
+				TYPE\_MAGNETIC\_FIELD & 100 & 100 & 99(100) \\
+				TYPE\_MAGNETIC\_FIELD\_UNCALIBRATED & 100 & 100 & 99(100) \\
+				TYPE\_GAME\_ROTATION\_VECTOR & 100 & 100 & 179 \\
+				GNSS\_LOCATION & 1 & 1 & 1 \\
+				GNSS\_RAW\_MEASURENMENT & 1 & 1 & 1 \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}{模型}
+    \begin{itemize}
+        \item 数据预处理
+        \begin{itemize}
+            \item 原始数据时间同步
+            \item 原始数据转换训练数据
+        \end{itemize}
+
+        \item 不变卡尔曼滤波航迹推算模型
+        \begin{itemize}
+            \item Matlab 分析制图代码
+            \item Python 训练代码
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\section{研究计划}
+
+\begin{frame}[allowframebreaks]
     \begin{enumerate}
-        \item 基于手机低精度传感器的航迹推算
-        \item 自采数据包含停车场环境倒车轨迹
-        \item 模型中包含自适应网络结构识别停车等行为重置参数
+        \item 完成重庆数据集后处理
+        \begin{itemize}
+            \item 编写自动化处理脚本
+            \item 确认基于 GNSS 传感器时间同步方案有缺陷
+        \end{itemize}
+
+        \item 改进基于深度学习自适应不变卡尔曼滤波航迹推算方法
+        \begin{itemize}
+            \item 修改优化目标，减少保持时间和距离
+            \item 增加对前向速度的约束
+            \item 参考《IMU Dead-Reckoning Localization with RNN-IEKF Algorithm》在深度学习部分使用 RNN 模型替换 CNN 模型
+        \end{itemize}
+
+        \item 研究基于深度学习端到端航迹推算方法
+        \begin{itemize}
+            \item 参考《Understanding the Behavior of Data-Driven Inertial Odometry With Kinematics-Mimicking Deep Neural Network》实现端到端方法
+            \item 复现该论文在公开数据集的结果
+            \item 评估端到端模型在自采数据集的结果
+        \end{itemize}
+
+        \item 撰写小论文
+        \begin{itemize}
+            \item 改进的模型在自采的数据集上有可行的航迹推算结果
+        \end{itemize}
     \end{enumerate}
 \end{frame}
 
