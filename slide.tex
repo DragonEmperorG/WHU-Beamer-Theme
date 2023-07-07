@@ -38,6 +38,8 @@
 % graphicx – Enhanced support for graphics
 \usepackage{graphicx} % 支持插图
 
+\usepackage[skip=0pt]{caption}
+
 %% 插图
 % pgf – Create PostScript and PDF graphics in TEX
 \usepackage{tikz} % 支持绘图
@@ -129,107 +131,110 @@
 \end{frame}
 
 
-\section{研究背景}
+\section{研究进展}
 
 \begin{frame}
-    研究出发点
-    \begin{enumerate}
-        \item 高可用高精度室内外无缝定位的需求
-        \item 智能手机终端泛用性
-    \end{enumerate}
-    研究难点
-    \begin{enumerate}
-        \item 室内环境复杂
-        \item 智能手机传感器精度较差
-    \end{enumerate}
+    时间 15:09:51.070  15:11:55.070 距离 \qty{283.566}{\meter}
+    设计速度 \qty{15}{\km\per\hour} 匀速
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.7\textwidth]{pic/Result_2023_04_10_0008_Mate30_1_24801.png}
+        \caption{2023\_04\_10\_drive\_0008\_phone\_huawei\_mate30\_1\_24801 结果}
+        \label{fig:transformer-arc}
+    \end{figure}
 \end{frame}
 
-\begin{frame}{博士大论文章节安排}
-    博士大论文拟定的题目为《基于智能手机的数据和模型双驱动室内定位方法研究》，目前第3和第5章有发表于《基于数据与模型双驱动的音频/惯性传感器耦合定位方法》做支撑，但是作为大论文需要对文章中
-    \begin{description}
-        \item[1] 绪论
-        \item[2] 定位基本原理
-        \item[3] 数据驱动行人航迹推算
-        \item[4] 数据驱动车载航迹推算
-        \item[5] 数据驱动行人航迹推算和音频融合定位算法研究
-        \item[6] 数据驱动车载航迹推算和蓝牙融合定位算法研究
-        \item[7] 总结和展望
-    \end{description}
+\begin{frame}
+    时间 15:09:51.070  15:11:55.070 距离 \qty{283.566}{\meter}
+    设计速度 \qty{15}{\km\per\hour} 匀速
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.7\textwidth]{pic/Result_2023_04_10_0008_Mate30_1_24801.png}
+        \caption{2023\_04\_10\_drive\_0008\_phone\_huawei\_mate30\_1\_24801 结果}
+        \label{fig:transformer-arc}
+    \end{figure}
 \end{frame}
 
-\begin{frame}{现有研究成果}
-    目前第3和第5章有发表于《测绘学报》的《基于数据与模型双驱动的音频/惯性传感器耦合定位方法》做支撑，但是作为大论文需要对文章中数据驱动行人航迹推算部分模型进行小创新的研究，因为那篇文章中我仅使用了牛老师组提供的模型。
-    
-    从2022年12月到2023年5月，约6个月的时间对第4章的内容进行研究（在22年大约有零散的2个月对该方向进行了研究），目前使用自采数据，部分验证了基于不变卡尔曼滤波解决行车航迹推算的问题。
-
+\begin{frame}
+    时间 15:09:51.070  15:11:55.070 距离 \qty{283.566}{\meter}
+    设计速度 \qty{15}{\km\per\hour} 匀速
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.7\textwidth]{pic/Result_2023_04_10_0008_Mate30_1_24801.png}
+        \caption{2023\_04\_10\_drive\_0008\_phone\_huawei\_mate30\_1\_24801 结果}
+        \label{fig:transformer-arc}
+    \end{figure}
 \end{frame}
 
-\section{研究内容}
-
-\begin{frame}{数据集}
-    \begin{itemize}
-        \item 公开数据集
-        \begin{itemize}
-            \item KITTI (2013)
-        \end{itemize}
-
-        \item 自采数据集
-        \begin{itemize}
-            \item 重庆202304数据集
-        \end{itemize}
-    \end{itemize}
+\begin{frame}
+    时间 15:10:27.000  15:11:55.070 距离 \qty{281.487}{\meter}
+    设计速度 \qty{15}{\km\per\hour} 匀速
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.7\textwidth]{pic/Result_2023_04_10_0008_Mate30_7187_24801.png}
+        \caption{2023\_04\_10\_drive\_0008\_phone\_huawei\_mate30\_7187\_24801 结果}
+        \label{fig:transformer-arc}
+    \end{figure}
 \end{frame}
 
-\begin{frame}{智能手机（Android）采样率}
-	
-	% https://www.st.com/resource/en/datasheet/lsm6dsm.pdf
-	
-	% https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi160-ds000.pdf
-	% https://www.st.com/resource/en/datasheet/lis2mdl.pdf
-    \begin{table}
-    \tiny
-        \begin{tabular}{lccc}
-            \toprule
-	            传感器/手机 (Hz) & HUAWEI Mate30 & HUAWEI P20 & GOOGLE Pixel3 \\
-	            \midrule
-	            TYPE\_ACCELEROMETER & 500 & 500 & 393(400) \\
-				TYPE\_ACCELEROMETER\_UNCALIBRATED & 250 & 250 & 393(400) \\
-				TYPE\_GYROSCOPE & 500 & 500 & 393(400) \\
-				TYPE\_GYROSCOPE\_UNCALIBRATED & 500 & 500 & 393(400) \\
-				TYPE\_MAGNETIC\_FIELD & 100 & 100 & 99(100) \\
-				TYPE\_MAGNETIC\_FIELD\_UNCALIBRATED & 100 & 100 & 99(100) \\
-				TYPE\_GAME\_ROTATION\_VECTOR & 100 & 100 & 179 \\
-				GNSS\_LOCATION & 1 & 1 & 1 \\
-				GNSS\_RAW\_MEASURENMENT & 1 & 1 & 1 \\
-            \bottomrule
-        \end{tabular}
-    \end{table}
+\begin{frame}
+    时间 15:09:51.590  15:11:54.590 距离 \qty{281.559}{\meter}
+    设计速度 \qty{15}{\km\per\hour} 匀速
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.7\textwidth]{pic/Result_2023_04_10_0008_Pixel3_1_24601.png}
+        \caption{2023\_04\_10\_drive\_0008\_phone\_google\_pixel3\_1\_24601 结果}
+        \label{fig:transformer-arc}
+    \end{figure}
 \end{frame}
 
-\begin{frame}{模型}
-    \begin{itemize}
-        \item 数据预处理
-        \begin{itemize}
-            \item 原始数据时间同步
-            \item 原始数据转换训练数据
-        \end{itemize}
+\begin{frame}
+    时间 15:10:27.000  15:11:54.590 距离 \qty{281.487}{\meter}
+    设计速度 \qty{15}{\km\per\hour} 匀速
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.7\textwidth]{pic/Result_2023_04_10_0008_Pixel3_7083_24601.png}
+        \caption{2023\_04\_10\_drive\_0008\_phone\_google\_pixel3\_7083\_24601 结果}
+        \label{fig:transformer-arc}
+    \end{figure}
+\end{frame}
 
-        \item 不变卡尔曼滤波航迹推算模型
-        \begin{itemize}
-            \item Matlab 分析制图代码
-            \item Python 训练代码
-        \end{itemize}
-    \end{itemize}
+
+
+\begin{frame}
+    时间 15:30:45.080  15:36:01.080 距离 \qty{844.222}{\meter}
+    设计速度 \qty{15}{\km\per\hour} 匀速
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.7\textwidth]{pic/Result_2023_04_10_0014_Mate30_1_63201.png}
+        \caption{2023\_04\_10\_drive\_0014\_phone\_huawei\_mate30\_1\_63201 结果}
+        \label{fig:transformer-arc}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    时间 15:31:17.000  15:36:01.080 距离 \qty{844.125}{\meter}
+    设计速度 \qty{15}{\km\per\hour} 匀速
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.7\textwidth]{pic/Result_2023_04_10_0014_Mate30_6385_63201.png}
+        \caption{2023\_04\_10\_drive\_0014\_phone\_huawei\_mate30\_6385\_63201 结果}
+        \label{fig:transformer-arc}
+    \end{figure}
 \end{frame}
 
 \section{研究计划}
 
 \begin{frame}[allowframebreaks]
     \begin{enumerate}
-        \item 完成重庆数据集后处理
+
+        \item 基于重庆数据集后处理结果撰写大论文数据预处理部分
+        
+        \item 深入分析基于深度学习自适应不变卡尔曼滤波航迹推算方法的结果，解决轨迹不平滑的问题
         \begin{itemize}
-            \item 编写自动化处理脚本
-            \item 确认基于 GNSS 传感器时间同步方案有缺陷
+            \item 裁切较短轨迹，缩短轨迹评价间隔，试验解决轨迹不平滑的问题
+            \item 选取静止轨迹，试验解决静止状态漂移的问题
+            \item 深入分析 20240413 易江路 长条环形训练无效的问题  
         \end{itemize}
 
         \item 改进基于深度学习自适应不变卡尔曼滤波航迹推算方法
@@ -240,16 +245,9 @@
         \end{itemize}
 
         \item 研究基于深度学习端到端航迹推算方法
-        \begin{itemize}
-            \item 参考《Understanding the Behavior of Data-Driven Inertial Odometry With Kinematics-Mimicking Deep Neural Network》实现端到端方法
-            \item 复现该论文在公开数据集的结果
-            \item 评估端到端模型在自采数据集的结果
-        \end{itemize}
 
         \item 撰写小论文
-        \begin{itemize}
-            \item 改进的模型在自采的数据集上有可行的航迹推算结果
-        \end{itemize}
+
     \end{enumerate}
 \end{frame}
 
