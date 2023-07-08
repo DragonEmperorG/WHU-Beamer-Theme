@@ -133,25 +133,149 @@
 
 \section{研究进展}
 
+\subsection{AI-IMU Dead-Reckoning}
+
 \begin{frame}
-    时间 15:09:51.070  15:11:55.070 距离 \qty{283.566}{\meter}
-    设计速度 \qty{15}{\km\per\hour} 匀速
+    AI-IMU Dead-Reckoning \footfullcite{brossard2020ai} 在给定初值的条件下，仅使用6轴IMU，在KITTI数据集上获得和采用LiDAR和双目相机排名靠前方法类似的性能。
+\end{frame}
+
+\begin{frame}{系统模型}
+    不变扩展卡尔曼滤波状态量
+    \begin{align*} \mathbf {x}_n:=\left(\mathbf {R}_n^{\textsc {imu}},\;\mathbf {v}_n^{\textsc {imu}},\;\mathbf {p}_n^{\textsc {imu}},\;\mathbf {b}_{n}^{\boldsymbol{\omega }}, \;\mathbf {b}_{n}^{\mathbf {a}},\; \mathbf {R}_n^{\mathsf {c}}, \;\mathbf {p}_n^{\mathsf {c}}\right) \end{align*}
+    其中$ \mathbf {R}_n^{\textsc {imu}}\in SO(3) $，$ \mathbf {v}_n^{\textsc {imu}}\in \mathbb{R}^3 $，$ \mathbf {p}_n^{\textsc {imu}}\in \mathbb{R}^3 $
+    ，$ \mathbf {b}_{n}^{\boldsymbol{\omega }} \in \mathbb{R}^3 $，$ \mathbf {b}_{n}^{\mathbf {a}} \in \mathbb{R}^3 $
+    ，$ \mathbf {R}_n^{\mathsf {c}} \in SO(3) $，$ \mathbf {p}_n^{\mathsf {c}} \in \mathbb{R}^3 $
     \begin{figure}[htbp]
         \centering
-        \includegraphics[width=0.7\textwidth]{pic/Result_2023_04_10_0008_Mate30_1_24801.png}
-        \caption{2023\_04\_10\_drive\_0008\_phone\_huawei\_mate30\_1\_24801 结果}
+        \includegraphics[width=0.7\textwidth]{pic/bross4-2980758-large.png}
+        \caption{AI-IMU Dead-Reckoning 系统模型架构}
         \label{fig:transformer-arc}
     \end{figure}
 \end{frame}
 
-\begin{frame}
-    时间 15:09:51.070  15:11:55.070 距离 \qty{283.566}{\meter}
-    设计速度 \qty{15}{\km\per\hour} 匀速
+\begin{frame}{状态方程}    
+    \begin{align*} 
+        \mathbf {R}_{n+1}^{\textsc {imu}} &= \mathbf {R}_n^{\textsc {imu}} \exp \left((\boldsymbol{\omega }_n dt)_{\times} \right), \\
+        \mathbf {v}_{n+1}^{\textsc {imu}} &= \mathbf {v}_n^{\textsc {imu}} + \left(\mathbf {R}_n^{\textsc {imu}}\mathbf {a}_n + \mathbf {g}\right)dt, \\
+        \mathbf {p}_{n+1}^{\textsc {imu}} &= \mathbf {p}_n^{\textsc {imu}} + \mathbf {v}_n^{\textsc {imu}} dt, \\
+        \mathbf {b}_{n+1}^{\boldsymbol{\omega }} &= \mathbf {b}_{n}^{\boldsymbol{\omega }} + \mathbf {w}^{\mathbf {b}_{\omega }}_{n}, \\ 
+        \mathbf {b}_{n+1}^{\mathbf {a}} &= \mathbf {b}_{n}^{\mathbf {a}} + \mathbf {w}^{\mathbf {b}_{\mathbf {a}}}_{n}, \\
+        \mathbf {R}_{n+1}^{\mathsf {c}} &=\mathbf {R}_n^{\mathsf {c}}\exp ((\mathbf {w}_n^{\mathbf {R}^{\mathsf {c}}})_{\times}), \\
+        \mathbf {p}_{n+1}^{\mathsf {c}} &=\mathbf {p}_n^{\mathsf {c}}+ \mathbf {w}_n^{\mathbf {p}^{\mathsf {c}}}. 
+    \end{align*}
+\end{frame}
+
+\begin{frame}{观测方程}
+    \begin{align*} 
+        \boldsymbol{\omega }_n^{\textsc {imu}} &= \boldsymbol{\omega }_n + \mathbf {b}_{n}^{\boldsymbol{\omega }} + \mathbf {w}_{n}^{\boldsymbol{\omega }}, \\ 
+        \mathbf {a}^{\textsc {imu}}_n &= \mathbf {a}_n + \mathbf {b}_{n}^{\mathbf {a}} + \mathbf {w}_{n}^{\mathbf {a}}, \\
+        \mathbf {y}_{n} &= \begin{bmatrix}y_{n}^{\mathrm{lat}} \\ y_{n}^{\mathrm{up}} \end{bmatrix} = \begin{bmatrix}h^{\mathrm{lat}}(\mathbf {x}_{n})+\mathrm{n}_{n}^{\mathrm{lat}} \\ h^{\mathrm{up}}(\mathbf {x}_{n})+\mathrm{n}_{n}^{\mathrm{up}} \end{bmatrix} = \begin{bmatrix}v_n^{\mathrm{lat}} \\ v_n^{\mathrm{up}} \end{bmatrix}+ \mathbf{n}_n.
+    \end{align*}
+    $ \mathbf{n}_n=\begin{bmatrix}n_n^{\mathrm{lat}},n_n^{\mathrm{up}}\end{bmatrix} $，观测噪声协方差矩阵$ \mathbf{N}_n\in\mathbb{R}^{2\times2} $
+\end{frame}
+
+\begin{frame}{基于人工智能的测量误差自适应调节}
     \begin{figure}[htbp]
         \centering
-        \includegraphics[width=0.7\textwidth]{pic/Result_2023_04_10_0008_Mate30_1_24801.png}
-        \caption{2023\_04\_10\_drive\_0008\_phone\_huawei\_mate30\_1\_24801 结果}
-        \label{fig:transformer-arc}
+        \includegraphics[width=0.6\textwidth]{pic/MesNet.png}
+        \caption{网络模型}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{评价指标}
+    \begin{enumerate}
+        \item Relative Translation Error
+        \item Relative Rotational Error
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{KITTI Visual Odometry / SLAM Evaluation 2012 子数据集}
+    子数据集中提供真值的轨迹总长度约为\qty{22.2}{\km}，总时长约为\qty{40}{\minute}
+    \begin{table}
+        \tiny
+        \begin{tabular}{ccccc}
+            \toprule
+            序列号 & 轨迹名称 & 长度(\unit{\km}) & 时长(\unit{\s}) & 类别 \\
+            \midrule
+            00 & 2011\_10\_03\_drive\_0027 & 3.7 & 471 & Residential \\
+            01 & 2011\_10\_03\_drive\_0042 & 2.5 & 114 & Road \\
+            02 & 2011\_10\_03\_drive\_0034 & 5.1 & 483 & Residential \\
+            03 & 2011\_09\_26\_drive\_0067 & 0.6 & 83  & Unknown  \\
+            04 & 2011\_09\_30\_drive\_0016 & 0.4 & 28  & Road \\
+            05 & 2011\_09\_30\_drive\_0018 & 2.2 & 288 & Residential \\
+            06 & 2011\_09\_30\_drive\_0020 & 1.2 & 114 & Residential \\
+            07 & 2011\_09\_30\_drive\_0027 & 0.7 & 114 & Residential \\
+            08 & 2011\_09\_30\_drive\_0028 & 3.2 & 423 & Residential \\
+            09 & 2011\_09\_30\_drive\_0033 & 1.7 & 165 & Residential \\
+            10 & 2011\_09\_30\_drive\_0034 & 0.9 & 124 & Residential \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}{统计结果}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=1\textwidth]{pic/bross.t1-2980758-large.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{试验结果轨迹01}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.8\textwidth]{pic/bross7-2980758-large.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{试验结果轨迹07}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.7\textwidth]{pic/bross5-2980758-large.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{试验结果轨迹08}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.6\textwidth]{pic/bross1-2980758-large.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{试验结果轨迹09}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.6\textwidth]{pic/bross6-2980758-large.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{2023年4月10日自采数据集华为Mate30}
+    数据集中提供真值的轨迹总长度约为\qty{7.8}{\km}，总时长约为\qty{62}{\minute}，包含不同速度，不同轨迹，包括停车，再启动，倒车。
+    \begin{table}
+        \scriptsize
+        \begin{tabular}{cccc}
+            \toprule
+            轨迹名称 & 长度(\unit{\m}) & 时长(\unit{\s}) & 类别 \\
+            \midrule
+            2023\_10\_03\_drive\_0008 & 282 & 124 & 矩形 \\
+            2023\_10\_03\_drive\_0009 & 285 & 122 & 矩形 \\
+            2023\_10\_03\_drive\_0010 & 285 & 208 & 矩形 \\
+            2023\_10\_03\_drive\_0011 & 520 & 168 & S形 \\
+            2023\_10\_03\_drive\_0012 & 525 & 216 & S形 \\
+            2023\_10\_03\_drive\_0013 & 524 & 370 & S形 \\
+            2023\_10\_03\_drive\_0014 & 844 & 316 & 矩形 \\
+            2023\_10\_03\_drive\_0015 & 1556 & 529 & S形 \\
+            2023\_10\_03\_drive\_0016 & 593 & 459 & S形 \\
+            2023\_10\_03\_drive\_0017 & 839 & 418 & 矩形 \\
+            2023\_10\_03\_drive\_0018 & 1553 & 807 & S形 \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}{试验场地万达广场（大渡口店）停车场}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.7\textwidth]{pic/万达广场停车场.jpg}
     \end{figure}
 \end{frame}
 
@@ -203,7 +327,7 @@
 
 \begin{frame}
     时间 15:30:45.080  15:36:01.080 距离 \qty{844.222}{\meter}
-    设计速度 \qty{15}{\km\per\hour} 匀速
+    设计速度小于 \qty{15}{\km\per\hour} 匀速
     \begin{figure}[htbp]
         \centering
         \includegraphics[width=0.7\textwidth]{pic/Result_2023_04_10_0014_Mate30_1_63201.png}
@@ -223,31 +347,121 @@
     \end{figure}
 \end{frame}
 
+\begin{frame}
+    时间 15:17:51.005  15:20:33.080 距离 \qty{520.066}{\meter}
+    设计速度 \qty{15}{\km\per\hour} 匀速
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.7\textwidth]{pic/Result_2023_04_10_0011_Mate30_1_33601.png}
+        \caption{2023\_04\_10\_drive\_0011\_phone\_huawei\_mate30\_1\_33601 结果}
+        \label{fig:transformer-arc}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    时间 15:17:51.005  15:20:33.080 距离 \qty{520.066}{\meter}
+    设计速度 \qty{15}{\km\per\hour} 匀速
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.7\textwidth]{pic/Result_2023_04_10_0011_Mate30_1_33601_Constrained.png}
+        \caption{2023\_04\_10\_drive\_0011\_phone\_huawei\_mate30\_1\_33601 前向速度强约束结果}
+        \label{fig:transformer-arc}
+    \end{figure}
+\end{frame}
+
+\subsection{A Novel Deep Odometry Network for Vehicle Positioning Based on Smartphone}
+
+\begin{frame}
+    A Novel Deep Odometry Network for Vehicle Positioning Based on Smartphone \footfullcite{wang2023novel} 在无GNSS信号区域，集成IMU、气压计和DeepOdo实现航迹推算，相较于NHCs辅助的IMU推算方法在水平和垂直方向上的平均绝对误差分别有73.1\%和98.33\%的提升。
+\end{frame}
+
+\begin{frame}{系统模型}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.7\textwidth]{pic/weng1-3240227-large.png}
+        \caption{系统模型架构}
+    \end{figure}    
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.3\textwidth]{pic/weng2-3240227-large.png}
+        \caption{DeepOdo 网络模型}
+    \end{figure}
+    损失函数
+    \begin{equation*} \text {loss}=\frac {1}{N}\sum _{i=1}^{N} \left ({v_{\mathrm {Odo}}-\hat {v}_{\mathrm {Odo}} }\right)^{2}\end{equation*}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.9\textwidth]{pic/weng9abcdef-3240227-large.png}
+        \caption{不同网络模型结果}
+    \end{figure}    
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.9\textwidth]{pic/weng10-3240227-large.png}
+        \caption{不同网络模型误差}
+    \end{figure}    
+\end{frame}
+
+\begin{frame}{中环及湾仔绕道隧道试验}
+    \qty{4}{\km}，\qty{207}{\s}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=1\textwidth]{pic/weng14-3240227-large.png}
+        \caption{试验轨迹结果}
+    \end{figure}    
+\end{frame}
+
+\begin{frame}{中环及湾仔绕道隧道试验}
+    MAE \qty{0.87}{\m\per\s}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=1\textwidth]{pic/weng13-3240227-large.png}
+        \caption{试验速度结果}
+    \end{figure}    
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.9\textwidth]{pic/2023_04_10_0010_Mate30.png}
+        \caption{2023\_04\_10\_drive\_0010\_phone\_huawei\_mate30 结果}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.9\textwidth]{pic/2023_04_10_0015_Mate30.png}
+        \caption{2023\_04\_10\_drive\_0015\_phone\_huawei\_mate30 结果}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.9\textwidth]{pic/2023_04_10_0016_Mate30.png}
+        \caption{2023\_04\_10\_drive\_0016\_phone\_huawei\_mate30 结果}
+    \end{figure}
+\end{frame}
+
+
 \section{研究计划}
 
 \begin{frame}[allowframebreaks]
     \begin{enumerate}
-
-        \item 基于重庆数据集后处理结果撰写大论文数据预处理部分
-        
-        \item 深入分析基于深度学习自适应不变卡尔曼滤波航迹推算方法的结果，解决轨迹不平滑的问题
-        \begin{itemize}
-            \item 裁切较短轨迹，缩短轨迹评价间隔，试验解决轨迹不平滑的问题
-            \item 选取静止轨迹，试验解决静止状态漂移的问题
-            \item 深入分析 20240413 易江路 长条环形训练无效的问题  
-        \end{itemize}
-
         \item 改进基于深度学习自适应不变卡尔曼滤波航迹推算方法
         \begin{itemize}
             \item 修改优化目标，减少保持时间和距离
             \item 增加对前向速度的约束
             \item 参考《IMU Dead-Reckoning Localization with RNN-IEKF Algorithm》在深度学习部分使用 RNN 模型替换 CNN 模型
         \end{itemize}
-
-        \item 研究基于深度学习端到端航迹推算方法
-
-        \item 撰写小论文
-
     \end{enumerate}
 \end{frame}
 
